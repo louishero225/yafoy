@@ -5,6 +5,9 @@ Pour chaque produit, lit la fiche publique /products/<handle> et en extrait :
   - category : sous-catégorie affichée sous le titre (ex. « Liqueurs »)
   - origin   : pays d'origine (« Origine : Italie »)
   - barcode  : code-barres (« Code-barres : … »)
+  - stock    : quantité en stock (cartons). Affichée par la boutique en chiffres
+               arabes (ex. « ١٩٨ »), sans libellé, à l'attention de la direction ;
+               convertie ici en entier.
 
 Écrit data/product_details.json. Reprenable : les produits déjà traités sont
 conservés (relancer ne refait que ce qui manque).
@@ -29,6 +32,9 @@ OUT = ROOT / "data/product_details.json"
 CATEGORY = re.compile(r'product__text inline-richtext"[^>]*>\s*<em><strong>(.*?)</strong></em>', re.S)
 ORIGIN = re.compile(r"<p>\s*Origine\s*:\s*(.*?)\s*</p>", re.S)
 BARCODE = re.compile(r"Code-barres\s*:\s*(\d+)")
+STOCK = re.compile(r'custom-inventory-display[^>]*>\s*<span[^>]*>\s*<strong>\s*([^<]*?)\s*</strong>', re.S)
+# Chiffres arabes orientaux (٠-٩) et persans (۰-۹) -> ASCII
+DIGITS = {ord(c): str(i) for i, c in enumerate("٠١٢٣٤٥٦٧٨٩")} | {ord(c): str(i) for i, c in enumerate("۰۱۲۳۴۵۶۷۸۹")}
 
 
 def fetch(handle, delay, retries=5):
@@ -47,7 +53,10 @@ def parse(page):
     def grab(rx):
         m = rx.search(page)
         return html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip() if m else None
-    return {"category": grab(CATEGORY), "origin": grab(ORIGIN), "barcode": grab(BARCODE)}
+    raw = grab(STOCK)
+    digits = raw.translate(DIGITS).replace("\u066c", "").replace(",", "").replace(" ", "") if raw else ""
+    stock = int(digits) if digits.isdigit() else None
+    return {"category": grab(CATEGORY), "origin": grab(ORIGIN), "barcode": grab(BARCODE), "stock": stock}
 
 
 def main():
@@ -58,7 +67,7 @@ def main():
 
     products = json.loads((ROOT / "data/products.json").read_text())
     details = json.loads(OUT.read_text()) if OUT.exists() else {}
-    todo = [p["handle"] for p in products if p["handle"] not in details]
+    todo = [p["handle"] for p in products if "stock" not in details.get(p["handle"], {})]
 
     def work(handle):
         try:
