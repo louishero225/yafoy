@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CatalogBrowser from '../../components/CatalogBrowser.astro';
+import { collections, HIDDEN_COLLECTIONS } from '../../lib/catalog';
+
+export function getStaticPaths() {
+  return collections
+    .filter((c) => !HIDDEN_COLLECTIONS.has(c.handle))
+    .map((c) => ({ params: { handle: c.handle }, props: { collection: c } }));
+}
+
+const { collection } = Astro.props;
+const n = collection.products.length;
+---
+<Base
+  title={collection.title}
+  description={`${collection.title} : ${n} référence${n > 1 ? 's' : ''} importée${n > 1 ? 's' : ''}, vendues au carton à prix de gros TTC. ${collection.description}`.trim()}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: collection.title,
+    numberOfItems: n,
+  }}
+>
+  <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Catalogue', href: '/boutique' }, { label: collection.title }]} />
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">{n} référence{n > 1 ? 's' : ''}</p>
+      <h1>{collection.title}</h1>
+      {collection.description && <p>{collection.description}</p>}
+    </div>
+  </header>
+  <CatalogBrowser products={collection.products} />
+</Base>

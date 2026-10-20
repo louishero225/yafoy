@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../config/site';
+---
+<dialog class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" data-checkout-domain={SITE.checkoutDomain}>
+  <div class="cart">
+    <div class="cart__head">
+      <h2 id="cart-title">Votre panier</h2>
+      <button class="icon-btn" type="button" data-cart-close aria-label="Fermer le panier"><Icon name="close" /></button>
+    </div>
+    <div class="cart__empty" data-cart-empty>
+      <p>Votre panier est vide</p>
+      <p>Parcourez le catalogue et ajoutez vos cartons.</p>
+      <a class="btn btn--primary" href="/boutique" data-cart-close>Voir le catalogue</a>
+    </div>
+    <ul class="cart__lines" data-cart-lines hidden></ul>
+    <div class="cart__foot" data-cart-foot hidden>
+      <div class="cart__total">
+        <span>Total estimé</span>
+        <strong data-cart-total>0 FCFA</strong>
+      </div>
+      <p class="cart__note">Prix de gros TTC. La livraison et le règlement se finalisent sur notre page de commande sécurisée.</p>
+      <a class="btn btn--primary" href="#" data-cart-checkout>Passer la commande</a>
+    </div>
+  </div>
+  <p class="sr-only" role="status" aria-live="polite" data-cart-status></p>
+</dialog>

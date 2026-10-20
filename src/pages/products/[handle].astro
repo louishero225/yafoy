@@ -1,0 +1,278 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products, relatedProducts, formatPrice, FAMILIES, type Product } from '../../lib/catalog';
+import { SITE } from '../../config/site';
+import { STORES } from '../../config/stores';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { handle: p.handle }, props: { product: p } }));
+}
+
+const { product: p } = Astro.props as { product: Product };
+const family = FAMILIES.find((f) => f.handle === p.familyHandle);
+const related = relatedProducts(p, 4);
+const specs = [
+  ['Conditionnement', p.pack?.label],
+  ['Famille', p.familyLabel],
+  ['Type', p.category && p.category.toLowerCase() !== p.familyLabel?.toLowerCase() ? p.category : null],
+  ['Origine', p.origin],
+  ['Référence', p.sku],
+  ['Code-barres', p.barcode],
+].filter(([, v]) => v) as [string, string][];
+
+const description = [
+  `${p.title}${p.origin ? ` (${p.origin})` : ''}`,
+  p.pack ? `${p.pack.label.toLowerCase()}` : null,
+  `${formatPrice(p.price)} TTC.`,
+]
+  .filter(Boolean)
+  .join(' — ');
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.title,
+  image: new URL(p.image.lg, SITE.url).toString(),
+  sku: p.sku ?? undefined,
+  gtin: p.barcode ?? undefined,
+  category: p.category ?? p.familyLabel ?? undefined,
+  offers: {
+    '@type': 'Offer',
+    url: new URL(`/products/${p.handle}`, SITE.url).toString(),
+    priceCurrency: SITE.currency,
+    price: p.price,
+    availability: p.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+  },
+};
+---
+<Base title={p.title} description={description} image={p.image.lg} jsonLd={ld}>
+  <Breadcrumbs
+    items={[
+      { label: 'Accueil', href: '/' },
+      { label: 'Catalogue', href: '/boutique' },
+      ...(family ? [{ label: family.label, href: `/collections/${family.handle}` }] : []),
+      { label: p.title },
+    ]}
+  />
+
+  <article class="container product">
+    <div class="product__media">
+      <img src={p.image.lg} alt={p.title} width="1000" height="1000" fetchpriority="high" />
+      {!p.available && <span class="badge badge--soldout">En rupture de stock</span>}
+    </div>
+
+    <div class="product__info">
+      <p class="eyebrow">{[p.category ?? p.familyLabel, p.origin].filter(Boolean).join(' · ')}</p>
+      <h1>{p.title}</h1>
+
+      <p class="product__price">
+        <span class="product__amount">{formatPrice(p.price)}</span>
+        <span class="product__tax">TTC{p.pack ? ` · ${p.pack.label.toLowerCase()}` : ''}</span>
+      </p>
+      {p.unitPrice && p.pack && (
+        <p class="product__unit">Soit environ {formatPrice(p.unitPrice)} l'unité ({p.pack.volume}).</p>
+      )}
+
+      <div class="product__buy" data-product-form>
+        {p.available ? (
+          <>
+            <div class="qty" role="group" aria-label="Nombre de cartons">
+              <button type="button" data-qty-step="-1" aria-label="Diminuer la quantité">−</button>
+              <input type="number" min="1" max="999" value="1" inputmode="numeric" data-qty-input aria-label="Nombre de cartons" />
+              <button type="button" data-qty-step="1" aria-label="Augmenter la quantité">+</button>
+            </div>
+            <button
+              class="btn btn--primary product__add"
+              type="button"
+              data-add-to-cart
+              data-variant-id={p.variantId}
+              data-handle={p.handle}
+              data-title={p.title}
+              data-pack={p.pack?.label ?? ''}
+              data-price={p.price}
+              data-image={p.image.sm}
+            >
+              <Icon name="bag" /> Ajouter au panier
+            </button>
+          </>
+        ) : (
+          <>
+            <button class="btn" type="button" disabled>Momentanément indisponible</button>
+            <p class="product__hint">
+              Appelez la boutique la plus proche pour connaître la date de réapprovisionnement.
+              <a href="/nos-boutiques">Voir les boutiques</a>
+            </p>
+          </>
+        )}
+      </div>
+
+      <ul class="product__assure">
+        <li><Icon name="check" /> Prix de gros TTC, vente par carton</li>
+        <li><Icon name="check" /> Paiement sécurisé à la validation de la commande</li>
+        <li><Icon name="check" /> Conseil et achat sur place dans nos {STORES.length} boutiques</li>
+      </ul>
+
+      {p.descriptionHtml && <div class="product__desc" set:html={p.descriptionHtml} />}
+
+      <dl class="product__specs">
+        {specs.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section section--sand related">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Dans le même esprit</p>
+            <h2>Vous aimerez aussi</h2>
+          </div>
+          {family && <a class="link-arrow" href={`/collections/${family.handle}`}>Tous les {family.label.toLowerCase()} <Icon name="arrow" /></a>}
+        </div>
+        <div class="product-grid product-grid--4">
+          {related.map((r) => <ProductCard product={r} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .product {
+    display: grid;
+    gap: 2.5rem 4rem;
+    padding-block: 0.5rem clamp(3.5rem, 8vw, 6rem);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .product {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    }
+    .product__media {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+  .product__media {
+    position: relative;
+    background: var(--tile);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+  .product__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .product__media .badge {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.8rem;
+  }
+  .product__info {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .product__info h1 {
+    font-size: clamp(2.3rem, 5vw, 3.6rem);
+  }
+  .product__price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+  }
+  .product__amount {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--navy-900);
+    font-variant-numeric: lining-nums;
+  }
+  .product__tax {
+    font-size: 0.9rem;
+    color: var(--ink-mute);
+  }
+  .product__unit {
+    margin-top: -0.6rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .product__buy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding-block: 1.25rem;
+    border-block: 1px solid var(--line);
+  }
+  .product__add {
+    flex: 1 1 14rem;
+  }
+  .product__hint {
+    flex-basis: 100%;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .product__assure {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .product__assure li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .product__assure :global(svg) {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--orange-ink);
+  }
+  .product__desc {
+    color: var(--ink-soft);
+    max-width: 36rem;
+  }
+  .product__specs {
+    width: 100%;
+    margin: 0.5rem 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .product__specs > div {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .product__specs dt {
+    color: var(--ink-mute);
+  }
+  .product__specs dd {
+    margin: 0;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .related {
+    padding-block: clamp(3.5rem, 7vw, 5.5rem);
+  }
+</style>

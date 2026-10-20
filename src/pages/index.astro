@@ -1,0 +1,423 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { familiesWithProducts, latestArrivals, products, productByHandle } from '../lib/catalog';
+import { KEY_FIGURES, STORES } from '../config/stores';
+import { SITE } from '../config/site';
+
+/** Visuels vedettes (handles Shopify). */
+const FAMILY_IMAGE: Record<string, string> = {
+  'vin-rouge': 'mouton-cadet-4',
+  'vin-blanc': 'mouton-cadet-2',
+  'vin-rose': 'mouton-cadet-1',
+  'vin-mousseux-1': 'freixenet-cordon-negro-brut',
+  champagne: 'nicolas-feuillate-brut',
+  'spiritueux-1': 'bombay-sapphire',
+  biere: 'corelli-forte',
+  'petillants-sans-alcool': 'le-celebracion-raisin-blanc',
+};
+const hero = ['mouton-cadet-4', 'nicolas-feuillate-brut', 'bombay-sapphire'].map((h) => productByHandle.get(h)!);
+const arrivals = latestArrivals(8);
+const refs = Math.floor(products.length / 50) * 50;
+const cities = [...new Set(STORES.map((s) => s.area))];
+---
+<Base>
+  <!-- ═════ Hero ═════ -->
+  <section class="hero">
+    <svg class="hero__grapes grapes" width="220" height="250" viewBox="0 0 220 250" fill="currentColor" aria-hidden="true">
+      <circle cx="40" cy="40" r="32" /><circle cx="110" cy="40" r="32" /><circle cx="180" cy="40" r="32" />
+      <circle cx="75" cy="110" r="32" /><circle cx="145" cy="110" r="32" /><circle cx="110" cy="180" r="32" />
+    </svg>
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Importateur &amp; distributeur · Côte d'Ivoire</p>
+        <h1>Vins et spiritueux importés, <em>à prix de gros.</em></h1>
+        <p class="hero__lede">
+          Plus de {refs} références vendues au carton, à retrouver dans nos {STORES.length} boutiques ou à commander en ligne.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="/boutique">Découvrir le catalogue <Icon name="arrow" /></a>
+          <a class="btn btn--ghost" href="/nos-boutiques">Trouver une boutique</a>
+        </div>
+        <ul class="hero__points">
+          <li><Icon name="check" /> Prix de gros TTC en {SITE.currencyLabel}</li>
+          <li><Icon name="check" /> Vente par carton</li>
+          <li><Icon name="check" /> Paiement en ligne sécurisé</li>
+        </ul>
+      </div>
+      <div class="hero__art" aria-hidden="true">
+        {hero.map((p, i) => (
+          <a class={`arch arch--${i + 1}`} href={`/products/${p.handle}`} tabindex="-1">
+            <img src={p.image.lg} alt="" width="1000" height="1000" loading={i === 1 ? 'eager' : 'lazy'} fetchpriority={i === 1 ? 'high' : undefined} />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ Familles ═════ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Le catalogue</p>
+          <h2>Choisissez votre univers</h2>
+        </div>
+        <a class="link-arrow" href="/boutique">Tous les produits <Icon name="arrow" /></a>
+      </div>
+      <ul class="families">
+        {familiesWithProducts.map((f) => {
+          const img = productByHandle.get(FAMILY_IMAGE[f.handle]) ?? f.products[0];
+          return (
+            <li>
+              <a class="family" href={`/collections/${f.handle}`}>
+                <span class="family__arch"><img src={img.image.sm} alt="" width="480" height="480" loading="lazy" /></span>
+                <span class="family__name">{f.label}</span>
+                <span class="family__count">{f.products.length} références</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════ Dernières arrivées ═════ -->
+  <section class="section section--sand">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Nouveautés</p>
+          <h2>Dernières arrivées</h2>
+        </div>
+        <a class="link-arrow" href="/boutique?tri=nouveautes">Voir toutes les nouveautés <Icon name="arrow" /></a>
+      </div>
+      <div class="product-grid product-grid--4">
+        {arrivals.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════ Chiffres ═════ -->
+  <section class="section section--dark on-dark figures">
+    <div class="container figures__inner">
+      <div class="figures__copy">
+        <p class="eyebrow">YAFOY · SNIDCI</p>
+        <h2>Une présence de proximité, au plus près de vos points de vente.</h2>
+        <p>
+          Depuis 2007, la SNIDCI importe et distribue des vins et spiritueux en Côte d'Ivoire. YAFOY en est l'enseigne : des showrooms
+          ouverts aux professionnels comme aux particuliers, avec une équipe qui accueille, conseille et livre.
+        </p>
+        <a class="btn btn--ghost" href="/qui-sommes-nous">Notre histoire</a>
+      </div>
+      <dl class="figures__list">
+        {KEY_FIGURES.map((k) => (
+          <div>
+            <dt>{k.label}</dt>
+            <dd>{k.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- ═════ Boutiques ═════ -->
+  <section class="section">
+    <div class="container stores">
+      <div>
+        <p class="eyebrow">Nos boutiques</p>
+        <h2>Onze adresses, d'Abidjan à Bouaké.</h2>
+        <p class="stores__lede">
+          Venez choisir sur place, au détail ou en gros, ou appelez la boutique la plus proche pour préparer votre commande.
+        </p>
+        <a class="btn btn--dark" href="/nos-boutiques"><Icon name="pin" /> Voir les adresses et téléphones</a>
+      </div>
+      <ul class="stores__areas" aria-label="Quartiers desservis">
+        {cities.map((c) => <li>{c}</li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--paper) 0%, var(--sand) 100%);
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3.5rem, 8vw, 6.5rem);
+  }
+  .hero__grapes {
+    display: none;
+    top: 8%;
+    right: -40px;
+    opacity: 0.14;
+    width: 360px;
+    height: auto;
+  }
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: 3.5rem;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .hero__grapes {
+      display: block;
+    }
+    .hero__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 3rem;
+    }
+  }
+  .hero__copy {
+    display: grid;
+    gap: 1.6rem;
+    justify-items: start;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--orange-ink);
+  }
+  .hero__lede {
+    max-width: 33rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    color: var(--ink-soft);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero__points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .hero__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .hero__points :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--orange-ink);
+  }
+
+  .hero__art {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr 1fr;
+    gap: clamp(0.5rem, 1.6vw, 1.1rem);
+    align-items: end;
+    max-width: 720px;
+    width: 100%;
+    margin-inline: auto;
+  }
+  .arch {
+    position: relative;
+    display: block;
+    background: var(--tile);
+    border-radius: 999px 999px 22px 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .arch:hover {
+    transform: translateY(-6px);
+  }
+  .arch img {
+    position: absolute;
+    left: -6%;
+    bottom: 0;
+    width: 112%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+  .arch--1 {
+    aspect-ratio: 3 / 4.2;
+    margin-bottom: 8%;
+  }
+  .arch--2 {
+    aspect-ratio: 3 / 5;
+  }
+  .arch--3 {
+    aspect-ratio: 3 / 4.2;
+    margin-bottom: 14%;
+  }
+
+  /* Familles */
+  .families {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.25rem) clamp(0.75rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 900px) {
+    .families {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .family {
+    display: grid;
+    gap: 0.2rem;
+    text-decoration: none;
+  }
+  .family__arch {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 4.8;
+    background: var(--tile);
+    border-radius: 999px 999px 18px 18px;
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+    transition: box-shadow 0.3s;
+  }
+  .family__arch img {
+    position: absolute;
+    left: -3%;
+    bottom: 0;
+    width: 106%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-origin: 50% 100%;
+  }
+  .family:hover .family__arch {
+    box-shadow: var(--shadow);
+  }
+  .family:hover .family__arch img {
+    transform: scale(1.06);
+  }
+  .family__name {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--navy-900);
+  }
+  .family:hover .family__name {
+    color: var(--orange-ink);
+  }
+  .family__count {
+    font-size: 0.85rem;
+    color: var(--ink-mute);
+  }
+
+  /* Chiffres */
+  .figures {
+    position: relative;
+    overflow: hidden;
+  }
+  .figures__inner {
+    display: grid;
+    gap: 3.5rem;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .figures__inner {
+      grid-template-columns: 1.1fr 1fr;
+      gap: 5rem;
+    }
+  }
+  .figures__copy {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+  .figures__copy p:not(.eyebrow) {
+    color: var(--on-dark-soft);
+    max-width: 34rem;
+  }
+  .figures__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin: 0;
+    background: rgb(255 255 255 / 0.12);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .figures__list > div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    padding: clamp(1.5rem, 3.5vw, 2.5rem);
+    background: var(--navy-900);
+  }
+  .figures__list dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 4.6rem);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--orange);
+  }
+  .figures__list dt {
+    font-size: 0.9rem;
+    color: var(--on-dark-soft);
+  }
+
+  /* Boutiques */
+  .stores {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .stores {
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+  }
+  .stores > div:first-child {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+  .stores__lede {
+    color: var(--ink-soft);
+    max-width: 32rem;
+  }
+  .stores__areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--navy);
+  }
+  .stores__areas li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .stores__areas li::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+</style>

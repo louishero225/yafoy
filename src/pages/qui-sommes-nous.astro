@@ -1,0 +1,244 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import { KEY_FIGURES, TIMELINE } from '../config/stores';
+import { SITE } from '../config/site';
+---
+<Base
+  title="Qui sommes-nous"
+  description="YAFOY est l'enseigne de la SNIDCI, importateur et distributeur de vins et spiritueux en Côte d'Ivoire depuis 2007. Découvrez notre histoire, notre réseau et notre équipe."
+>
+  <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Qui sommes-nous' }]} />
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">{SITE.legalName}</p>
+      <h1>Importateur et distributeur de vins et spiritueux.</h1>
+      <p>{SITE.legalFullName}. YAFOY est notre enseigne : des showrooms où l'on achète au détail comme en gros.</p>
+    </div>
+  </header>
+
+  <section class="section container about">
+    <div class="about__text">
+      <p class="eyebrow">Notre histoire</p>
+      <h2>De la vente terrain à un réseau de boutiques.</h2>
+      <p>
+        La SNIDCI a démarré en 2007 par la vente sur le terrain avant de s'implanter, quartier après quartier, dans les zones les plus
+        fréquentées d'Abidjan. Aujourd'hui, le showroom principal YAFOY se trouve au siège de l'entreprise, à côté de l'entrepôt : les
+        visiteurs y découvrent toute la gamme et peuvent acheter au détail ou en gros.
+      </p>
+      <p>
+        Depuis fin 2025, le réseau s'étend aussi à l'intérieur du pays avec une première boutique à Bouaké, dans le cadre d'une
+        stratégie de développement à l'échelle nationale.
+      </p>
+    </div>
+    <dl class="figures">
+      {KEY_FIGURES.map((k) => (
+        <div>
+          <dd>{k.value}</dd>
+          <dt>{k.label}</dt>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section section--sand">
+    <div class="container timeline-wrap">
+      <div>
+        <p class="eyebrow">Notre parcours</p>
+        <h2>Les étapes de notre expansion</h2>
+        <p class="timeline__lede">Chaque ouverture rapproche nos clients de leur cave.</p>
+      </div>
+      <ol class="timeline">
+        {TIMELINE.map((t) => (
+          <li class:list={{ 'is-planned': t.planned }}>
+            <time>{t.date}</time>
+            <div>
+              <p class="timeline__label">{t.label}{t.planned && <span class="chip">Projet</span>}</p>
+              {t.note && <p class="timeline__note">{t.note}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section container team">
+    <div class="team__text">
+      <p class="eyebrow">L'équipe</p>
+      <h2>Plus de 100 collaborateurs à votre service.</h2>
+      <p>
+        Vente, logistique, entrepôt, administration, finance, transport et service client : une équipe formée à accueillir, accompagner,
+        prendre vos commandes et vous livrer. Avec nos boutiques, nos entrepôts et notre flotte de véhicules, nous relions fournisseurs,
+        revendeurs et consommateurs à travers la Côte d'Ivoire.
+      </p>
+      <div class="team__cta">
+        <a class="btn btn--primary" href="/nos-boutiques"><Icon name="pin" /> Nos boutiques</a>
+        <a class="btn btn--ghost" href="/boutique">Voir le catalogue</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .about {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+    }
+  }
+  .about__text {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .about__text p:not(.eyebrow) {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    max-width: 38rem;
+  }
+  .about__text h2 {
+    margin-bottom: 0.4rem;
+  }
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    margin: 0;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .figures > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: #fff;
+  }
+  .figures dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5vw, 4rem);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--orange-ink);
+  }
+  .figures dt {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  .timeline-wrap {
+    display: grid;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (min-width: 960px) {
+    .timeline-wrap {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+    }
+    .timeline-wrap > div:first-child {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+  .timeline-wrap h2 {
+    margin-block: 0.9rem 1rem;
+  }
+  .timeline__lede {
+    color: var(--ink-soft);
+  }
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 2px;
+    background: var(--line-strong);
+  }
+  .timeline li {
+    position: relative;
+    display: grid;
+    gap: 0.15rem;
+    padding: 0 0 1.6rem 2.2rem;
+  }
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 3px solid var(--sand);
+    box-shadow: 0 0 0 1.5px var(--orange);
+  }
+  .timeline li.is-planned::before {
+    background: var(--sand);
+    box-shadow: 0 0 0 1.5px var(--line-strong);
+  }
+  .timeline time {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange-ink);
+  }
+  .timeline__label {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--navy-900);
+  }
+  .timeline__note {
+    font-size: 0.9rem;
+    color: var(--ink-mute);
+  }
+  .chip {
+    margin-left: 0.6rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    color: var(--ink-mute);
+  }
+
+  .team__text {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    max-width: 46rem;
+  }
+  .team__text p:not(.eyebrow) {
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+  }
+  .team__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+import { NAV, SITE } from '../config/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+---
+<aside class="announce" aria-label="Information">
+  <strong>Importés</strong> — vente par carton, prix de gros TTC en {SITE.currencyLabel}
+</aside>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label="YAFOY — accueil">
+      <img src="/brand/logo.png" alt="YAFOY" width="33" height="54" />
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      {NAV.map((n) => <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a>)}
+    </nav>
+    <div class="header-actions">
+      <a class="icon-btn" href="/boutique?recherche=1" aria-label="Rechercher un produit"><Icon name="search" /></a>
+      <button class="icon-btn" type="button" data-cart-open aria-label="Ouvrir le panier">
+        <Icon name="cart" />
+        <span class="cart-count" data-cart-count data-has-items="false" aria-hidden="true">0</span>
+      </button>
+      <button class="icon-btn menu-toggle" type="button" data-menu-open aria-label="Ouvrir le menu" aria-controls="mobile-nav">
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog class="mobile-nav" id="mobile-nav" aria-label="Menu">
+  <div class="mobile-nav__inner">
+    <div class="mobile-nav__top">
+      <a class="brand" href="/" aria-label="YAFOY — accueil"><img src="/brand/logo.png" alt="YAFOY" width="33" height="54" /></a>
+      <button class="icon-btn" type="button" data-menu-close aria-label="Fermer le menu"><Icon name="close" /></button>
+    </div>
+    <nav aria-label="Navigation mobile">
+      {NAV.map((n) => <a href={n.href}>{n.label}</a>)}
+      <a href="/qui-sommes-nous">Qui sommes-nous</a>
+    </nav>
+    <p class="mobile-nav__foot">Besoin d'aide ? Appelez le <a href={`tel:${SITE.mainPhone.replace(/\s/g, '')}`}>{SITE.mainPhone}</a></p>
+  </div>
+</dialog>
+
+<script>
+  const menu = document.getElementById('mobile-nav') as HTMLDialogElement | null;
+  document.querySelector('[data-menu-open]')?.addEventListener('click', () => menu?.showModal());
+  menu?.querySelector('[data-menu-close]')?.addEventListener('click', () => menu.close());
+  menu?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('nav a')) menu.close();
+  });
+</script>

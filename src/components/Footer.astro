@@ -1,0 +1,46 @@
+---
+import { SITE } from '../config/site';
+import { STORES } from '../config/stores';
+import { familiesWithProducts } from '../lib/catalog';
+const year = new Date().getFullYear();
+const tel = (p: string) => `tel:+225${p.replace(/\s/g, '')}`;
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="/brand/logo.png" alt="YAFOY" width="52" height="84" loading="lazy" />
+        <p>
+          YAFOY est l'enseigne de {SITE.legalName}, {SITE.legalFullName}. Vins, champagnes et spiritueux importés, vendus au carton à prix de gros.
+        </p>
+      </div>
+      <div>
+        <h2>Catalogue</h2>
+        <ul>
+          <li><a href="/boutique">Tous les produits</a></li>
+          {familiesWithProducts.map((f) => <li><a href={`/collections/${f.handle}`}>{f.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>YAFOY</h2>
+        <ul>
+          <li><a href="/qui-sommes-nous">Qui sommes-nous</a></li>
+          <li><a href="/nos-boutiques">Nos boutiques</a></li>
+          {SITE.socials.map((s) => <li><a href={s.url} target="_blank" rel="noopener noreferrer">{s.name}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li>Siège — Koumassi, Abidjan</li>
+          <li><a href={tel(SITE.mainPhone)}>{SITE.mainPhone}</a></li>
+          <li><a href="/nos-boutiques">Les {STORES.length} boutiques et leurs numéros</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p>{SITE.warning}</p>
+      <p>© {year} YAFOY — {SITE.legalName}. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>

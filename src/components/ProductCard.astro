@@ -1,0 +1,64 @@
+---
+import Icon from './Icon.astro';
+import { formatPrice, type Product } from '../lib/catalog';
+
+interface Props {
+  product: Product;
+  /** Attributs data-* utilisés par le filtre du catalogue. */
+  filterable?: boolean;
+  priority?: boolean;
+  /** Niveau de titre de la carte (2 quand la page n'a pas de h2 au-dessus). */
+  headingLevel?: 2 | 3;
+}
+const { product: p, filterable = false, priority = false, headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+const search = filterable
+  ? `${p.title} ${p.category ?? ''} ${p.origin ?? ''} ${p.familyLabel ?? ''}`
+  : undefined;
+---
+<article
+  class:list={['product-card', { 'is-soldout': !p.available }]}
+  data-product
+  data-family={filterable ? (p.familyHandle ?? '') : undefined}
+  data-origin={filterable ? (p.country ?? '') : undefined}
+  data-category={filterable ? (p.category ?? '') : undefined}
+  data-price={filterable ? p.price : undefined}
+  data-available={filterable ? String(p.available) : undefined}
+  data-created={filterable ? p.createdAt : undefined}
+  data-title={filterable ? p.title : undefined}
+  data-search={search}
+>
+  <div class="product-card__media">
+    <img
+      src={p.image.sm}
+      alt={p.title}
+      width="480"
+      height="480"
+      loading={priority ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+    {!p.available && <span class="badge badge--soldout">En rupture de stock</span>}
+    {p.available && (
+      <button
+        class="quick-add"
+        type="button"
+        data-add-to-cart
+        data-variant-id={p.variantId}
+        data-handle={p.handle}
+        data-title={p.title}
+        data-pack={p.pack?.label ?? ''}
+        data-price={p.price}
+        data-image={p.image.sm}
+        aria-label={`Ajouter ${p.title} au panier`}
+      >
+        <Icon name="plus" />
+      </button>
+    )}
+  </div>
+  <div class="product-card__body">
+    <p class="product-card__meta">{[p.category ?? p.familyLabel, p.origin].filter(Boolean).join(' · ')}</p>
+    <Heading class="product-card__title"><a href={`/products/${p.handle}`}>{p.title}</a></Heading>
+    {p.pack && <p class="product-card__pack">{p.pack.label}</p>}
+    <p class="price">{formatPrice(p.price)} <small>TTC</small></p>
+  </div>
+</article>

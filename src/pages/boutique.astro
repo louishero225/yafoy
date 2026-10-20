@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CatalogBrowser from '../components/CatalogBrowser.astro';
+import { products } from '../lib/catalog';
+
+const refs = Math.floor(products.length / 50) * 50;
+---
+<Base
+  title="Catalogue vins et spiritueux"
+  description={`Plus de ${refs} vins, champagnes, spiritueux et bières importés, vendus au carton à prix de gros TTC. Recherchez par famille, origine ou prix.`}
+>
+  <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Catalogue' }]} />
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Prix de gros TTC</p>
+      <h1>Le catalogue</h1>
+      <p>{products.length} références vendues au carton. Filtrez par famille, origine ou budget pour trouver le bon produit.</p>
+    </div>
+  </header>
+  <CatalogBrowser products={products} showFamilies />
+</Base>

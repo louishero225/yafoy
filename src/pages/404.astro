@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="Page introuvable" noindex>
+  <section class="section container lost">
+    <p class="eyebrow">Erreur 404</p>
+    <h1>Cette bouteille n'est plus sur l'étagère.</h1>
+    <p>La page que vous cherchez n'existe pas ou a été déplacée. Retrouvez notre sélection dans le catalogue.</p>
+    <div class="lost__cta">
+      <a class="btn btn--primary" href="/boutique">Voir le catalogue <Icon name="arrow" /></a>
+      <a class="btn btn--ghost" href="/">Retour à l'accueil</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    min-height: 50vh;
+    align-content: center;
+  }
+  .lost p:not(.eyebrow) {
+    max-width: 34rem;
+    color: var(--ink-soft);
+  }
+  .lost__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import { STORES } from '../config/stores';
+import { SITE } from '../config/site';
+
+const tel = (p: string) => `tel:+225${p.replace(/\s/g, '')}`;
+const maps = (s: (typeof STORES)[number]) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${s.area}, ${s.city}, Côte d'Ivoire`)}`;
+const cities = ['Abidjan', 'Bouaké'] as const;
+
+const ld = STORES.map((s) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Store',
+  name: s.name,
+  telephone: `+225${s.phone.replace(/\s/g, '')}`,
+  address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'CI' },
+  parentOrganization: { '@type': 'Organization', name: SITE.legalName },
+}));
+---
+<Base
+  title="Nos boutiques"
+  description={`Les ${STORES.length} boutiques YAFOY à Abidjan et Bouaké : adresses et numéros de téléphone pour préparer votre commande.`}
+  jsonLd={ld}
+>
+  <Breadcrumbs items={[{ label: 'Accueil', href: '/' }, { label: 'Nos boutiques' }]} />
+  <header class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Au plus près de vous</p>
+      <h1>Nos boutiques</h1>
+      <p>{STORES.length} adresses à Abidjan et à Bouaké. Appelez-nous pour préparer votre commande ou vérifier la disponibilité d'un produit.</p>
+    </div>
+  </header>
+
+  <div class="container stores-page">
+    {cities.map((city) => (
+      <section aria-labelledby={`city-${city}`}>
+        <h2 id={`city-${city}`}>{city}</h2>
+        <ul class="store-grid">
+          {STORES.filter((s) => s.city === city).map((s) => (
+            <li class:list={['store', { 'store--main': s.main }]}>
+              {s.main && <span class="store__tag">Siège</span>}
+              <p class="store__area">{s.area}</p>
+              <h3>{s.name}</h3>
+              <p class="store__address"><Icon name="pin" /> {s.address}</p>
+              <div class="store__actions">
+                <a class="btn btn--primary btn--sm" href={tel(s.phone)}><Icon name="phone" /> {s.phone}</a>
+                <a class="btn btn--ghost btn--sm" href={maps(s)} target="_blank" rel="noopener noreferrer">Itinéraire</a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .stores-page {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(4rem, 8vw, 6.5rem);
+  }
+  .stores-page h2 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--navy-900);
+  }
+  .store-grid {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  }
+  .store {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.6rem 1.5rem 1.5rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: box-shadow 0.25s, border-color 0.25s, transform 0.25s;
+  }
+  .store:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+  .store--main {
+    background: var(--navy-900);
+    border-color: var(--navy-900);
+    color: var(--on-dark-soft);
+  }
+  .store--main h3 {
+    color: #fff;
+  }
+  .store--main .store__area {
+    color: var(--orange);
+  }
+  .store--main .btn--ghost {
+    border-color: rgb(255 255 255 / 0.5);
+    color: #fff;
+  }
+  .store--main .btn--ghost:hover {
+    background: #fff;
+    color: var(--navy-900);
+  }
+  .store__tag {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: var(--orange);
+    color: var(--navy-900);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .store__area {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange-ink);
+  }
+  .store h3 {
+    font-size: 1.7rem;
+  }
+  .store__address {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    flex: 1;
+    font-size: 0.95rem;
+    color: inherit;
+  }
+  .store__address :global(svg) {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  .store__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+</style>
