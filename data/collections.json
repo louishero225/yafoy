@@ -1,0 +1,232 @@
+[
+  {
+    "id": 311028940883,
+    "title": "Bière",
+    "handle": "biere",
+    "description": "",
+    "published_at": "2026-05-30T17:54:27+00:00",
+    "updated_at": "2026-10-18T11:17:47+00:00",
+    "image": {
+      "id": 1632898777171,
+      "created_at": "2026-05-30T18:33:43+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/20260530_131522.jpg?v=1780166023",
+      "alt": null
+    },
+    "products_count": 3
+  },
+  {
+    "id": 303432335443,
+    "title": "Carton mixte de 6 bouteilles",
+    "handle": "melange-vin-bordeaux-16300",
+    "description": "",
+    "published_at": "2026-01-02T09:58:14+00:00",
+    "updated_at": "2026-03-12T22:11:23+00:00",
+    "image": {
+      "id": 1631759958099,
+      "created_at": "2026-01-02T10:28:07+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/unnamed.jpg?v=1767349687",
+      "alt": null
+    },
+    "products_count": 3
+  },
+  {
+    "id": 306666373203,
+    "title": "Champagne",
+    "handle": "champagne",
+    "description": "",
+    "published_at": "2026-03-15T00:08:32+00:00",
+    "updated_at": "2026-10-20T11:16:53+00:00",
+    "image": null,
+    "products_count": 7
+  },
+  {
+    "id": 301806649427,
+    "title": "Premium – Champagne",
+    "handle": "test2",
+    "description": "",
+    "published_at": "2025-11-11T14:39:30+00:00",
+    "updated_at": "2026-03-14T01:48:26+00:00",
+    "image": null,
+    "products_count": 10
+  },
+  {
+    "id": 306738626643,
+    "title": "Pétillants sans Alcool",
+    "handle": "petillants-sans-alcool",
+    "description": "",
+    "published_at": "2026-03-17T01:54:01+00:00",
+    "updated_at": "2026-09-26T15:18:13+00:00",
+    "image": {
+      "id": 1632526106707,
+      "created_at": "2026-04-16T02:20:14+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/20260408_162753.jpg?v=1776306014",
+      "alt": null
+    },
+    "products_count": 19
+  },
+  {
+    "id": 306601918547,
+    "title": "Spiritueux",
+    "handle": "spiritueux-1",
+    "description": "",
+    "published_at": "2026-03-12T22:20:31+00:00",
+    "updated_at": "2026-10-12T14:59:46+00:00",
+    "image": null,
+    "products_count": 22
+  },
+  {
+    "id": 301995327571,
+    "title": "Spiritueux Paniers",
+    "handle": "spiritueux",
+    "description": "",
+    "published_at": "2025-11-16T17:12:03+00:00",
+    "updated_at": "2026-03-25T15:24:45+00:00",
+    "image": {
+      "id": 1631470944339,
+      "created_at": "2025-11-17T00:29:09+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/113U-12.jpg?v=1763339432",
+      "alt": null
+    },
+    "products_count": 15
+  },
+  {
+    "id": 301997293651,
+    "title": "Tous Les Paniers cadeaux",
+    "handle": "tous-les-produits",
+    "description": "",
+    "published_at": "2025-11-16T18:22:46+00:00",
+    "updated_at": "2026-03-14T01:56:17+00:00",
+    "image": {
+      "id": 1631470911571,
+      "created_at": "2025-11-17T00:25:02+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/111C-10.jpg?v=1763339102",
+      "alt": null
+    },
+    "products_count": 80
+  },
+  {
+    "id": 306602016851,
+    "title": "Tous les produits",
+    "handle": "tous-les-produits-1",
+    "description": "",
+    "published_at": "2026-03-12T22:28:00+00:00",
+    "updated_at": "2026-10-20T11:16:53+00:00",
+    "image": null,
+    "products_count": 560
+  },
+  {
+    "id": 306500730963,
+    "title": "Vin blanc",
+    "handle": "vin-blanc",
+    "description": "",
+    "published_at": "2026-03-11T01:48:23+00:00",
+    "updated_at": "2026-10-20T11:16:53+00:00",
+    "image": {
+      "id": 1632277725267,
+      "created_at": "2026-03-11T01:48:54+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/20260217_122926_8770e2c3-eeb8-4fab-9cf6-87b0eafd79cd.jpg?v=1773193734",
+      "alt": null
+    },
+    "products_count": 66
+  },
+  {
+    "id": 306500829267,
+    "title": "Vin Mousseux",
+    "handle": "vin-mousseux-1",
+    "description": "",
+    "published_at": "2026-03-11T01:51:08+00:00",
+    "updated_at": "2026-10-06T17:52:18+00:00",
+    "image": null,
+    "products_count": 34
+  },
+  {
+    "id": 301989691475,
+    "title": "Vin Mousseux (paniers)",
+    "handle": "vin-mousseux",
+    "description": "",
+    "published_at": "2025-11-16T12:04:41+00:00",
+    "updated_at": "2026-03-14T01:56:17+00:00",
+    "image": {
+      "id": 1631470878803,
+      "created_at": "2025-11-17T00:23:24+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/110B-11.jpg?v=1763339004",
+      "alt": null
+    },
+    "products_count": 3
+  },
+  {
+    "id": 306500894803,
+    "title": "Vin rosé",
+    "handle": "vin-rose",
+    "description": "",
+    "published_at": "2026-03-11T01:53:02+00:00",
+    "updated_at": "2026-10-06T17:48:56+00:00",
+    "image": {
+      "id": 1632277790803,
+      "created_at": "2026-03-11T01:53:01+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/20260217_124703.jpg?v=1773357318",
+      "alt": null
+    },
+    "products_count": 35
+  },
+  {
+    "id": 306500632659,
+    "title": "Vin rouge",
+    "handle": "vin-rouge",
+    "description": "",
+    "published_at": "2026-03-11T01:45:49+00:00",
+    "updated_at": "2026-10-20T11:16:53+00:00",
+    "image": {
+      "id": 1632277692499,
+      "created_at": "2026-03-11T01:47:05+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/20260217_145801.jpg?v=1773193625",
+      "alt": null
+    },
+    "products_count": 371
+  },
+  {
+    "id": 301806354515,
+    "title": "Vins 375ml",
+    "handle": "cadeaux-de-noel-vins-mousseux",
+    "description": "",
+    "published_at": "2025-11-11T14:32:20+00:00",
+    "updated_at": "2026-03-14T01:49:10+00:00",
+    "image": {
+      "id": 1631470846035,
+      "created_at": "2025-11-17T00:20:10+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/105B-05.jpg?v=1763339272",
+      "alt": null
+    },
+    "products_count": 17
+  },
+  {
+    "id": 301035520083,
+    "title": "Vins 750ml",
+    "handle": "cadeaux-de-noel",
+    "description": "",
+    "published_at": "2025-10-22T18:07:05+00:00",
+    "updated_at": "2026-03-14T01:49:05+00:00",
+    "image": {
+      "id": 1631437914195,
+      "created_at": "2025-11-12T11:09:03+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/113D-15.jpg?v=1762945792",
+      "alt": ""
+    },
+    "products_count": 36
+  },
+  {
+    "id": 301826080851,
+    "title": "Vins Mousseux sans Alcool ni porc",
+    "handle": "vins-mousseux-avec-et-sans-alcool",
+    "description": "",
+    "published_at": "2025-11-12T01:35:27+00:00",
+    "updated_at": "2026-03-14T01:48:22+00:00",
+    "image": {
+      "id": 1631470977107,
+      "created_at": "2025-11-17T00:31:04+00:00",
+      "src": "https://cdn.shopify.com/s/files/1/0672/8731/8611/collections/110J-08.jpg?v=1763339464",
+      "alt": null
+    },
+    "products_count": 3
+  }
+]
